@@ -1,6 +1,6 @@
 # News-Strike
 News-Strike is a news app that provides latest news from a number of sources.
-It uses NewsApiSwift 2.0 which is a swift wrapper for news.org API.
+It uses NewsApiSwift 2.0 which is a swift wrapper for https://newsapi.org/ API.
 
 # Initial Version:
 In the initial version you can view top headlines and articles from various sources.
