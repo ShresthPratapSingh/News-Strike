@@ -61,8 +61,13 @@ class NewsStrikeViewController: UITableViewController {
             newsCell.sourceLabel.text = headlines[indexPath.item].source.name
             newsCell.headlineLabel.text = headlines[indexPath.item].title
             
-            let timeInHours = Int((headlines[indexPath.item].publishedAt.timeIntervalSinceNow/3600)).description
-            newsCell.timeLabel.text = "\(timeInHours) hours ago"
+            let timeInHours = Int((headlines[indexPath.item].publishedAt.timeIntervalSinceNow/3600))
+            if timeInHours == 0 {
+                newsCell.timeLabel.text = "less than an hour ago"
+            }else{
+                newsCell.timeLabel.text = "\(timeInHours.description) hours ago"
+            }
+            
             if let url = headlines[indexPath.item].urlToImage,let imageData = try? Data(contentsOf: url){
                 newsCell.articleImageView.image = UIImage(data: imageData)
             }else{
