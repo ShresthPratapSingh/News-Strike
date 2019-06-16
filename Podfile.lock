@@ -1,0 +1,20 @@
+PODS:
+  - NewsAPISwift (2.0)
+  - SwiftyJSON (5.0.0)
+
+DEPENDENCIES:
+  - NewsAPISwift
+  - SwiftyJSON
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - NewsAPISwift
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  NewsAPISwift: 61b069546b0170b48ee3ef7a0158b294e125d7b7
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
+
+PODFILE CHECKSUM: 875bbc58a41ec28f92804b332c90d191ecc9c534
+
+COCOAPODS: 1.7.1
