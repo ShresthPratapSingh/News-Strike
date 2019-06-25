@@ -15,13 +15,13 @@ class NewsViewController: UIViewController {
     @IBOutlet weak var articleImageView: UIImageView!
     
     
-    private var imageUrl: URL?
+    private var imageUrl: URL!
     private var descriptionText: String?
     private var headlineText: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let url = self.imageUrl, let imageData = try? Data(contentsOf: url) {
+        if let imageData = try? Data(contentsOf: self.imageUrl) {
             self.articleImageView.image = UIImage(data: imageData)
         }else{
             articleImageView.image = UIImage(contentsOfFile: "placeholder")
@@ -34,8 +34,8 @@ class NewsViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    public func setVCPropertiesFor(url:URL?, headline:String, article:String){
-        if url != nil{ self.imageUrl = url }
+    public func setVCPropertiesFor(url:URL, headline:String, article:String){
+        self.imageUrl = url
         self.headlineText = headline
         self.descriptionText = article
     }

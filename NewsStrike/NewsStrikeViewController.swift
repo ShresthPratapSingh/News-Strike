@@ -11,8 +11,7 @@ import NewsAPISwift
 
 class NewsStrikeViewController: UITableViewController {
     
-    private var loadingAlert = UIAlertController(title: "Loading", message: "Please wait...", preferredStyle: .alert)
-    
+    private var loadingAlert = UIAlertController(title: "Loading", message: "Please wait...", preferredStyle: UIAlertController.Style.alert)
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.global(qos: .userInitiated).async {
@@ -74,11 +73,11 @@ class NewsStrikeViewController: UITableViewController {
                 newsCell.articleImageView.image = UIImage(contentsOfFile: "placeholder")
             }
         }
+        //MARK:- BAD CODE(FORCED UNWRAP)
         return cell!
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         if let url = headlines[indexPath.item].urlToImage{
             if let vc = UIStoryboard(name: "Main", bundle: nil)
                 .instantiateViewController(withIdentifier: "identifier") as? NewsArticleViewController {
