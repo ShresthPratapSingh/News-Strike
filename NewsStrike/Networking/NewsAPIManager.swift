@@ -53,7 +53,7 @@ class NewsAPIManager: NSObject {
     }
     
     func fetchTopNewsArticles(fromCategories categories : [Categories],inLanguage language:Language = .english,completionHandler: @escaping ([NewsArtizxcle])->Void,failure: (@escaping (Error)->())){
-        var urlString = "https://newsapi.org/v2/top-headlines?"
+        var urlString = "https://newsapi.org/v2/sources?"
         let categoryString = generateCategoryString(from: categories)
         urlString.append(categoryString  + "&language=\(language.rawValue)" + "&apiKey=\(apiKey)")
         
@@ -67,12 +67,43 @@ class NewsAPIManager: NSObject {
                         failure(error)
                     }
                 default:
-                    if let jsonResponse = response.result.value as? [String:Any?],let articlesDict = jsonResponse["articles"] as? [[String:Any?]]{
-                        var newsArticles = [NewsArtizxcle]()
-                        for article in articlesDict{
-                            newsArticles.append(NewsArtizxcle(article))
+//                    if let jsonResponse = response.result.value as? [String:Any?],let articlesDict = jsonResponse["articles"] as? [[String:Any?]]{
+//                        var newsArticles = [NewsArtizxcle]()
+//                        for article in articlesDict{
+//                            newsArticles.append(NewsArtizxcle(article))
+//                        }
+//                        completionHandler(newsArticles)
+//                    }
+                    if let jsonResponse = response.result.value as? [String:Any?],let sourcesArray = jsonResponse["sources"] as? [[String:String?]]{
+                        var sourceString = String()
+                        for sourceDict in sourcesArray{
+                            if let sourceID = sourceDict["id"]{
+                                if sourceDict == sourcesArray.last{
+                                    sourceString.append(sourceID!)
+                                }else{
+                                    sourceString.append(sourceID! + ",")
+                                }
+                            }
                         }
-                        completionHandler(newsArticles)
+                        if let newURL = URL(string: "https://newsapi.org/v2/everything?sources="+sourceString+"&apiKey=\(self.apiKey)"){
+                            Alamofire.request(newURL).validate().responseJSON(completionHandler: { (response) in
+                                switch (response.result){
+                                case .failure(let error):
+                                    if let failureResponseValue = response.result.value as? [String:String]{
+                                        print("\n\n!!!!!!ERROR!!!!!!\n\n\(String(describing: failureResponseValue["code"]))\n\(String(describing: failureResponseValue["message"]))")
+                                    }
+                                    failure(error)
+                                default:
+                                    if let jsonResponse = response.result.value as? [String: Any?], let articlesDict = jsonResponse["articles"] as? [[String: Any?]] {
+                                        var newsArticles = [NewsArtizxcle]()
+                                        for article in articlesDict {
+                                            newsArticles.append(NewsArtizxcle(article))
+                                        }
+                                        completionHandler(newsArticles)
+                                    }
+                                }
+                            })
+                        }
                     }
                 }
             }

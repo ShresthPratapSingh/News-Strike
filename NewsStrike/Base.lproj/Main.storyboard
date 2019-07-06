@@ -44,9 +44,9 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="source" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eP6-ij-Lzg">
-                                            <rect key="frame" x="5" y="193.5" width="404" height="15"/>
+                                            <rect key="frame" x="5" y="193.5" width="404" height="17"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="15" id="k5k-ei-rRf"/>
+                                                <constraint firstAttribute="height" constant="17" id="k5k-ei-rRf"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
                                             <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -446,7 +446,6 @@
         <!--News Article View Controller-->
         <scene sceneID="fbZ-bD-rF2">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ONe-12-U0q" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="NewsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rAy-dn-Ggd" customClass="NewsArticleViewController" customModule="NewsStrike" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lPU-gJ-KLx">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -493,6 +492,7 @@
                         <outlet property="articleTitleLabel" destination="ohQ-rY-MtY" id="74o-pO-Sy4"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ONe-12-U0q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="12" y="-329"/>
         </scene>

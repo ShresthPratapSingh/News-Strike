@@ -64,6 +64,7 @@ class NewsStrikeViewController: UITableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell")
+        cell?.selectionStyle = .none
         if let newsCell = cell as? NewsTableViewCell{
             newsCell.sourceLabel.text = headlinesData[indexPath.item].sourceName
             newsCell.headlineLabel.text = headlinesData[indexPath.item].articleTitle
