@@ -20,7 +20,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().tintColor = .red
         UINavigationBar.appearance().barTintColor = .black
         UINavigationBar.appearance().tintColor = .white
-        
         return true
     }
 

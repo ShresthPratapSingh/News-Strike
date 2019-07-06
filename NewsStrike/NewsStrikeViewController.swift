@@ -7,42 +7,50 @@
 //
 
 import UIKit
-import NewsAPISwift
 
-class NewsStrikeViewController: UITableViewController {
+class NewsStrikeViewController: UITableViewController{
+
     
-    private var loadingAlert = UIAlertController(title: "Loading", message: "Please wait...", preferredStyle: UIAlertController.Style.alert)
+    private var dataModelInstance = DataModel.sharedInstance
+    var isBackButtonEnabled = false
+    var category : Categories = .all
+//    private var loadingAlert = UIAlertController(title: "Loading", message: "Please wait...", preferredStyle: UIAlertController.Style.alert)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.askProviderForNews()
+        dataModelInstance.delegate = self
+        if isBackButtonEnabled{
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+            self.navigationItem.leftBarButtonItem?.tintColor = .white
         }
-        present(loadingAlert,animated: true)
+//        present(loadingAlert,animated: true)
+        self.askProviderForNews()
     }
     
-    private var sourceString = ["abc-news","cnn","business-insider","cbs-news","cnbc","daily-mail","crypto-coins-news","fortune","fox-news","google-news","national-geographic","nbc-news","techcrunch-cn","techcrunch","techradar","the-new-york-times","time","the-times-of-india","the-economist","google-news-in"]
+    @objc private func done(){
+        self.dismiss(animated: true, completion: nil)
+    }
     
-    private var headlines = [NewsArticle]()
+    //TODO:- remove this and ask from all sources.
+    
+    private var sources : [NewsSources] = [.abcNews,.cnn,.buisnessInsider,.cbsNews,.cnbc,.dailyMail,.cryptoCoinsNews,.fortune,.foxNews,.googleNews,.natGeo,.nbcNews,.techcrunch,.techradar,.theNewYorkTimes,.time,.theTimesOfIndia,.theEconomist,.googleNewsIndia]
+    
+    private var headlinesData = [NewsArtizxcle](){
+        didSet{
+            tableView.reloadData()
+//            loadingAlert.dismiss(animated: true, completion: nil)
+        }
+    }
     
     func askProviderForNews(){
-        let newsAPI = NewsAPI(apiKey: "f1302092afc14ebe95c72a4f74affa92")
-        newsAPI.getTopHeadlines(q: "", sources: sourceString, category: .all, language: .en, country: .all){
-            result in
-            switch result{
-            case .failure(let error):
-                print(error)
-                break
-            case .success(let headlines):
-                self.headlines = headlines
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                    self.loadingAlert.dismiss(animated: true)
-                }
-                break
+        if category == Categories.all{
+            if dataModelInstance.topHeadlinesData != nil{
+                headlinesData = dataModelInstance.topHeadlinesData!
+            }else{
+                dataModelInstance.getNewsData(fromSources: sources)
             }
-        }
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
+        }else{
+            dataModelInstance.getNewsData(fromCategories: [category])
         }
     }
     
@@ -51,23 +59,18 @@ class NewsStrikeViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return headlines.count
+        return headlinesData.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell")
         if let newsCell = cell as? NewsTableViewCell{
-            newsCell.sourceLabel.text = headlines[indexPath.item].source.name
-            newsCell.headlineLabel.text = headlines[indexPath.item].title
+            newsCell.sourceLabel.text = headlinesData[indexPath.item].sourceName
+            newsCell.headlineLabel.text = headlinesData[indexPath.item].articleTitle
             
-            let timeInHours = Int((headlines[indexPath.item].publishedAt.timeIntervalSinceNow/3600))
-            if timeInHours == 0 {
-                newsCell.timeLabel.text = "less than an hour ago"
-            }else{
-                newsCell.timeLabel.text = "\(timeInHours.description) hours ago"
-            }
+            newsCell.timeLabel.text = headlinesData[indexPath.item].publishedAt
             
-            if let url = headlines[indexPath.item].urlToImage,let imageData = try? Data(contentsOf: url){
+            if let url = headlinesData[indexPath.item].articleImageURL,let imageData = try? Data(contentsOf: url){
                 newsCell.articleImageView.image = UIImage(data: imageData)
             }else{
                 newsCell.articleImageView.image = UIImage(contentsOfFile: "placeholder")
@@ -78,10 +81,12 @@ class NewsStrikeViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let url = headlines[indexPath.item].urlToImage{
+        if let imageURL = headlinesData[indexPath.item].articleImageURL{
             if let vc = UIStoryboard(name: "Main", bundle: nil)
-                .instantiateViewController(withIdentifier: "identifier") as? NewsArticleViewController {
-                vc.setVCPropertiesFor(url: url, headline: headlines[indexPath.item].title, article: headlines[indexPath.item].articleDescription ?? "Article Description Not Provided By Server")
+                .instantiateViewController(withIdentifier: "NewsArticleViewController") as? NewsArticleViewController {
+                if let headline = headlinesData[indexPath.item].articleTitle,let articleURL = headlinesData[indexPath.item].articleURL{
+                    vc.setVCPropertiesFor(urlToImage:imageURL,urlToArticle:articleURL, headline: headline , article: headlinesData[indexPath.item].articleDescription ?? "Article Description Not Provided By Server")
+                }
                 
                 self.present(
                     vc,
@@ -91,6 +96,18 @@ class NewsStrikeViewController: UITableViewController {
             }
         }
     }
+
+
+}
+
+extension NewsStrikeViewController: DataModelDelegateProtocol {
     
+    func recievedDataSuccesfully(articleData: [NewsArtizxcle]) {
+        self.headlinesData = articleData
+    }
+    
+    func failedRecievingData(withError error: Error) {
+        
+    }
 }
 

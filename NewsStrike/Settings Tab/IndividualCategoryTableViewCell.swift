@@ -13,16 +13,31 @@ class IndividualCategoryTableViewCell: UITableViewCell {
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var categoryImageView: UIImageView!
     
-    var isCategorySelected = false
+//    var isCategorySelected : Bool!{
+//        didSet{
+//            saveState()
+//        }
+//    }
+
+    private var userDefaults = UserDefaults.standard
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+//        extractState()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
+    }
+    
+    func saveState(){
+        userDefaults.set(categoryImageView.isHidden, forKey: Keys.isCategorySelected)
+    }
+    
+    func extractState(){
+        categoryImageView.isHidden = userDefaults.bool(forKey: Keys.isCategorySelected)
     }
 
 }
