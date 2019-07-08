@@ -8,22 +8,36 @@
 
 import UIKit
 
-class NewsStrikeViewController: UITableViewController{
+class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
 
+    
+    @IBOutlet weak var tableView: UITableView!
     
     private var dataModelInstance = DataModel.sharedInstance
     var isBackButtonEnabled = false
     var category : Categories = .all
-//    private var loadingAlert = UIAlertController(title: "Loading", message: "Please wait...", preferredStyle: UIAlertController.Style.alert)
+
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.red]
+        navigationController?.navigationBar.titleTextAttributes = textAttributes
+        
         dataModelInstance.delegate = self
+        tableView.tableFooterView = UIView()
+        let loadingVC = (UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "loadingViewController") as! LoadingAnimator)
+
+        self.present(loadingVC, animated: false, completion: nil)
+        
         if isBackButtonEnabled{
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
             self.navigationItem.leftBarButtonItem?.tintColor = .white
         }
-//        present(loadingAlert,animated: true)
+
         self.askProviderForNews()
     }
     
@@ -31,14 +45,12 @@ class NewsStrikeViewController: UITableViewController{
         self.dismiss(animated: true, completion: nil)
     }
     
-    //TODO:- remove this and ask from all sources.
-    
     private var sources : [NewsSources] = [.abcNews,.cnn,.buisnessInsider,.cbsNews,.cnbc,.dailyMail,.cryptoCoinsNews,.fortune,.foxNews,.googleNews,.natGeo,.nbcNews,.techcrunch,.techradar,.theNewYorkTimes,.time,.theTimesOfIndia,.theEconomist,.googleNewsIndia]
     
     private var headlinesData = [NewsArtizxcle](){
         didSet{
+            self.presentedViewController?.dismiss(animated: false, completion: nil)
             tableView.reloadData()
-//            loadingAlert.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -54,15 +66,15 @@ class NewsStrikeViewController: UITableViewController{
         }
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return headlinesData.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell")
         cell?.selectionStyle = .none
         if let newsCell = cell as? NewsTableViewCell{
@@ -77,11 +89,10 @@ class NewsStrikeViewController: UITableViewController{
                 newsCell.articleImageView.image = UIImage(contentsOfFile: "placeholder")
             }
         }
-        //MARK:- BAD CODE(FORCED UNWRAP)
         return cell!
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let imageURL = headlinesData[indexPath.item].articleImageURL{
             if let vc = UIStoryboard(name: "Main", bundle: nil)
                 .instantiateViewController(withIdentifier: "NewsArticleViewController") as? NewsArticleViewController {

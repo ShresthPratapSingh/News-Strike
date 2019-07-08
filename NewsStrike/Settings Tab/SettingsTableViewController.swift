@@ -91,11 +91,8 @@ class SettingsTableViewController: UITableViewController {
             switch indexPath.section{
             case 0:
                 let currentState = UserDefaults.standard.bool(forKey: Keys.isPrefferedUIPageScroll)
-                
                 UserDefaults.standard.set(!currentState, forKey: Keys.isPrefferedUIPageScroll)
-                
                 let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                
                 if currentState{
                     let newsStrikeTableVC = mainStoryboard.instantiateViewController(withIdentifier: "NewsStrikePageViewController")
                     (self.parent as? UITabBarController)?.viewControllers?[0] = newsStrikeTableVC

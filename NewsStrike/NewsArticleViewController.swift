@@ -14,13 +14,9 @@ class NewsArticleViewController: UIViewController {
     @IBOutlet weak var articleImageView: UIImageView!
     @IBOutlet weak var articleHeadlineLabel: UILabel!
     @IBOutlet weak var articleDescriptionLabel: UILabel!
-    
-
-    var isPageScrollEnabled = UserDefaults.standard.bool(forKey: Keys.isPrefferedUIPageScroll)
-    
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var visitSourceButton: UIButton!
-    
     @IBAction func visitSource(_ sender: Any) {
         if let url = articleURL{
             let safariVC = SFSafariViewController(url: url)
@@ -29,6 +25,8 @@ class NewsArticleViewController: UIViewController {
             self.present(safariVC, animated: true)
         }
     }
+    @IBOutlet weak var articleImageHeightConstraint: NSLayoutConstraint!
+    var isPageScrollEnabled = UserDefaults.standard.bool(forKey: Keys.isPrefferedUIPageScroll)
     
     private var imageUrl: URL?
     private var descriptionText: String?
@@ -37,6 +35,14 @@ class NewsArticleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let screenSize = UIScreen.main.bounds.size
+        
+        articleImageHeightConstraint.constant = screenSize.height*0.40
+        
+        if self.parent as? NewsStrikePageViewController != nil{
+            scrollView.isScrollEnabled = false
+        }
         if let url = self.imageUrl, let imageData = try? Data(contentsOf: url) {
             self.articleImageView.image = UIImage(data: imageData)
         }else{

@@ -27,7 +27,7 @@ class NewsStrikePageViewController: UIPageViewController,UIPageViewControllerDat
     
     private var headlinesData = [NewsArtizxcle](){
         didSet{
-            setViewControllers([getViewControllerFor(index: currentIndextInDataModel)], direction: .forward, animated: true, completion: nil)
+            setViewControllers([getViewControllerFor(index: currentIndextInDataModel)], direction: .forward, animated: false, completion: nil)
         }
     }
     
