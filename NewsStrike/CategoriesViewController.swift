@@ -67,6 +67,7 @@ class CategoriesViewController: UIViewController, UICollectionViewDataSource, UI
         }else{
             let tableNavigationController = (UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "NewsStrikeTableViewController")) as! UINavigationController
             if let tableVC = tableNavigationController.viewControllers.first as? NewsStrikeViewController{
+                tableVC.title = "\(category.rawValue) news"
                 tableVC.isBackButtonEnabled = true
                 tableVC.category = self.category
                 self.navigationController?.present(tableNavigationController, animated: true, completion: nil)

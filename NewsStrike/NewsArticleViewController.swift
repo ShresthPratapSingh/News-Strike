@@ -43,16 +43,22 @@ class NewsArticleViewController: UIViewController {
         if self.parent as? NewsStrikePageViewController != nil{
             scrollView.isScrollEnabled = false
         }
-        if let url = self.imageUrl, let imageData = try? Data(contentsOf: url) {
-            self.articleImageView.image = UIImage(data: imageData)
-        }else{
-            articleImageView.image = UIImage(contentsOfFile: "placeholder")
+        if let url = self.imageUrl{
+            DispatchQueue.global(qos: .userInitiated).async {
+                if let imageData = try? Data(contentsOf: url){
+                    DispatchQueue.main.async {
+                        self.articleImageView.image = UIImage(data: imageData)
+                    }
+                }
+            }
         }
         self.articleHeadlineLabel.text = self.headlineText
         self.articleDescriptionLabel.text = self.descriptionText
         
         if isPageScrollEnabled{
             self.view.bringSubviewToFront(dismissButton)
+        }else{
+            dismissButton.isHidden = true
         }
         visitSourceButton.layer.cornerRadius = 20
         visitSourceButton.layer.masksToBounds = true

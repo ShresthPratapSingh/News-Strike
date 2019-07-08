@@ -67,13 +67,6 @@ class NewsAPIManager: NSObject {
                         failure(error)
                     }
                 default:
-//                    if let jsonResponse = response.result.value as? [String:Any?],let articlesDict = jsonResponse["articles"] as? [[String:Any?]]{
-//                        var newsArticles = [NewsArtizxcle]()
-//                        for article in articlesDict{
-//                            newsArticles.append(NewsArtizxcle(article))
-//                        }
-//                        completionHandler(newsArticles)
-//                    }
                     if let jsonResponse = response.result.value as? [String:Any?],let sourcesArray = jsonResponse["sources"] as? [[String:String?]]{
                         var sourceString = String()
                         for sourceDict in sourcesArray{

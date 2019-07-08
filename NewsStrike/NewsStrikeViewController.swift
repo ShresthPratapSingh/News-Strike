@@ -24,18 +24,20 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
         tableView.dataSource = self
         tableView.delegate = self
         
+        let loadingVC = (UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "loadingViewController") as! LoadingAnimator)
+        
+        self.present(loadingVC, animated: false, completion: nil)
+        
         let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.red]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         
         dataModelInstance.delegate = self
         tableView.tableFooterView = UIView()
-        let loadingVC = (UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "loadingViewController") as! LoadingAnimator)
-
-        self.present(loadingVC, animated: false, completion: nil)
+        
         
         if isBackButtonEnabled{
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
-            self.navigationItem.leftBarButtonItem?.tintColor = .white
+            self.navigationItem.leftBarButtonItem?.tintColor = .red
         }
 
         self.askProviderForNews()
@@ -83,10 +85,14 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
             
             newsCell.timeLabel.text = headlinesData[indexPath.item].publishedAt
             
-            if let url = headlinesData[indexPath.item].articleImageURL,let imageData = try? Data(contentsOf: url){
-                newsCell.articleImageView.image = UIImage(data: imageData)
-            }else{
-                newsCell.articleImageView.image = UIImage(contentsOfFile: "placeholder")
+            if let url = headlinesData[indexPath.item].articleImageURL{
+                DispatchQueue.global(qos: .userInitiated).async {
+                    if let imageData = try? Data(contentsOf: url){
+                        DispatchQueue.main.async {
+                            newsCell.articleImageView.image = UIImage(data: imageData)
+                        }
+                    }
+                }
             }
         }
         return cell!
