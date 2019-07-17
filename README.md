@@ -8,9 +8,15 @@ News-Strike is a news app that provides latest news from a number of sources.
 4. Choose between two UX - **Page Scroll Mode and Table View Mode**
 
 ## Screenshots
-![Screenshot 2019-07-09 at 1 47 45 AM](https://user-images.githubusercontent.com/32341862/60841382-4c3f8e00-a1ef-11e9-97b8-88fd925af2b8.png)
-![Screenshot 2019-07-09 at 1 46 25 AM](https://user-images.githubusercontent.com/32341862/60841392-5497c900-a1ef-11e9-9ede-c3a627988aaf.png)
-![Screenshot 2019-07-09 at 1 45 53 AM](https://user-images.githubusercontent.com/32341862/60841393-55305f80-a1ef-11e9-9e4c-ec38d3b8b644.png)
-![Screenshot 2019-07-09 at 1 44 29 AM](https://user-images.githubusercontent.com/32341862/60841394-55305f80-a1ef-11e9-8d4e-d20545b9d13f.png)
+![Screenshot 2019-07-17 at 4 21 39 PM](https://user-images.githubusercontent.com/32341862/61370023-149baa80-a8af-11e9-8541-15a40729fd84.png)
+![Screenshot 2019-07-17 at 4 19 48 PM](https://user-images.githubusercontent.com/32341862/61370024-149baa80-a8af-11e9-9991-dc8f2fbca24a.png)
+![Screenshot 2019-07-17 at 4 19 13 PM](https://user-images.githubusercontent.com/32341862/61370025-149baa80-a8af-11e9-9f3c-1d8bef2bcac7.png)
+![Screenshot 2019-07-17 at 4 18 36 PM](https://user-images.githubusercontent.com/32341862/61370026-15344100-a8af-11e9-8c44-b4bb2efff6fd.png)
+![Screenshot 2019-07-17 at 4 14 51 PM](https://user-images.githubusercontent.com/32341862/61370027-15344100-a8af-11e9-8543-fcf243c416d7.png)
+![Screenshot 2019-07-17 at 4 14 05 PM](https://user-images.githubusercontent.com/32341862/61370028-15344100-a8af-11e9-8663-b4f8517c9e5c.png)
+![Screenshot 2019-07-17 at 4 13 39 PM](https://user-images.githubusercontent.com/32341862/61370029-15344100-a8af-11e9-9373-09f0d09bf89a.png)
+![Screenshot 2019-07-17 at 4 13 07 PM](https://user-images.githubusercontent.com/32341862/61370031-15ccd780-a8af-11e9-8d07-988629f6d623.png)
+![Screenshot 2019-07-17 at 4 12 56 PM](https://user-images.githubusercontent.com/32341862/61370033-15ccd780-a8af-11e9-81d7-4f480a81ba80.png)
+
 
 
