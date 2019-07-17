@@ -8,7 +8,8 @@ News-Strike is a news app that provides latest news from a number of sources.
 4. Choose between two UX - **Page Scroll Mode and Table View Mode**
 
 ## Screenshots
-![Screenshot 2019-07-17 at 4 21 39 PM](https://user-images.githubusercontent.com/32341862/61370023-149baa80-a8af-11e9-8541-15a40729fd84.png)
+
+![Screenshot 2019-07-17 at 4 24 16 PM](https://user-images.githubusercontent.com/32341862/61370157-60e6ea80-a8af-11e9-8172-5b4176115630.png)
 ![Screenshot 2019-07-17 at 4 19 48 PM](https://user-images.githubusercontent.com/32341862/61370024-149baa80-a8af-11e9-9991-dc8f2fbca24a.png)
 ![Screenshot 2019-07-17 at 4 19 13 PM](https://user-images.githubusercontent.com/32341862/61370025-149baa80-a8af-11e9-9f3c-1d8bef2bcac7.png)
 ![Screenshot 2019-07-17 at 4 18 36 PM](https://user-images.githubusercontent.com/32341862/61370026-15344100-a8af-11e9-8c44-b4bb2efff6fd.png)
