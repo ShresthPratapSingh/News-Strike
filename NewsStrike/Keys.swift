@@ -9,5 +9,9 @@
 import Foundation
 struct Keys{
     static var isPrefferedUIPageScroll = "isPrefferedUIPageScroll"
-    static var isCategorySelected = "isCategorySelected"
+    static var isSourceSelected = "isSourceSelected"
+    static var sourceData = "sourceData"
+    static var sourceID = "sourceID"
+    static var sourceName = "sourceName"
 }
+

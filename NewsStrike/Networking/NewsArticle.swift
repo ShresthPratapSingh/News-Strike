@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewsArtizxcle: NSObject {
+class NewsArticle: NSObject {
     var sourceName: String?
     var sourceID: String?
     var articleTitle: String?

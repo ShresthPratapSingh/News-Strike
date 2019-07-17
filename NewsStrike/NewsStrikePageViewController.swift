@@ -9,6 +9,7 @@
 import UIKit
 
 class NewsStrikePageViewController: UIPageViewController,UIPageViewControllerDataSource,UIPageViewControllerDelegate {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
@@ -17,6 +18,10 @@ class NewsStrikePageViewController: UIPageViewController,UIPageViewControllerDat
         
         let loadingVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "loadingViewController") 
         setViewControllers([loadingVC], direction: .forward, animated: true, completion: nil)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         self.askProviderForNews()
     }
     
@@ -25,7 +30,7 @@ class NewsStrikePageViewController: UIPageViewController,UIPageViewControllerDat
     
       private var sources : [NewsSources] = [.abcNews,.cnn,.buisnessInsider,.cbsNews,.cnbc,.dailyMail,.cryptoCoinsNews,.fortune,.foxNews,.googleNews,.natGeo,.nbcNews,.techcrunch,.techradar,.theNewYorkTimes,.time,.theTimesOfIndia,.theEconomist,.googleNewsIndia]
     
-    private var headlinesData = [NewsArtizxcle](){
+    private var headlinesData = [NewsArticle](){
         didSet{
             setViewControllers([getViewControllerFor(index: currentIndextInDataModel)], direction: .forward, animated: false, completion: nil)
         }
@@ -40,7 +45,7 @@ class NewsStrikePageViewController: UIPageViewController,UIPageViewControllerDat
             if dataModelInstance.topHeadlinesData != nil{
                 headlinesData = dataModelInstance.topHeadlinesData!
             }else{
-                dataModelInstance.getNewsData(fromSources: sources)
+                dataModelInstance.getNewsData(fromSources: dataModelInstance.getSelectedSources())
             }
         }else{
             dataModelInstance.getNewsData(fromCategories: [category])
@@ -77,11 +82,11 @@ class NewsStrikePageViewController: UIPageViewController,UIPageViewControllerDat
 }
 
 extension NewsStrikePageViewController: DataModelDelegateProtocol{
-    func recievedDataSuccesfully(articleData: [NewsArtizxcle]) {
+    func recievedDataSuccesfully(articleData: [NewsArticle]) {
         self.headlinesData = articleData
     }
     
-    func failedRecievingData(withError error: Error) {
+    func failedRecievingData(dueTo error: Error) {
         
     }
 }

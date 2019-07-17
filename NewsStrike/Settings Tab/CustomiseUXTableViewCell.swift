@@ -13,6 +13,8 @@ class CustomiseUXTableViewCell: UITableViewCell {
     
     private var userDefaults = UserDefaults.standard
     
+    @IBOutlet weak var labelWidthconstraint: NSLayoutConstraint!
+    
     private var indexPath : IndexPath?
     
     var isToggleON :Bool!{

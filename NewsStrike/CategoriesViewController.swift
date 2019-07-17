@@ -17,7 +17,6 @@ class CategoriesViewController: UIViewController, UICollectionViewDataSource, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         categoriesCollectionView.delegate = self
         categoriesCollectionView.dataSource = self
     }
@@ -35,7 +34,6 @@ class CategoriesViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     
-    //MARK:- BAD CODE
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         switch newsCategories[indexPath.item] {

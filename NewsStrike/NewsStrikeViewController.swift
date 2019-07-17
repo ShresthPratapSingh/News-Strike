@@ -13,11 +13,14 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
     
     @IBOutlet weak var tableView: UITableView!
     
-    private var dataModelInstance = DataModel.sharedInstance
     var isBackButtonEnabled = false
     var category : Categories = .all
-
+    private var dataModelInstance = DataModel.sharedInstance
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.askProviderForNews()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,17 +42,15 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
             self.navigationItem.leftBarButtonItem?.tintColor = .red
         }
-
-        self.askProviderForNews()
     }
     
     @objc private func done(){
         self.dismiss(animated: true, completion: nil)
     }
     
-    private var sources : [NewsSources] = [.abcNews,.cnn,.buisnessInsider,.cbsNews,.cnbc,.dailyMail,.cryptoCoinsNews,.fortune,.foxNews,.googleNews,.natGeo,.nbcNews,.techcrunch,.techradar,.theNewYorkTimes,.time,.theTimesOfIndia,.theEconomist,.googleNewsIndia]
     
-    private var headlinesData = [NewsArtizxcle](){
+    
+    private var headlinesData = [NewsArticle](){
         didSet{
             self.presentedViewController?.dismiss(animated: false, completion: nil)
             tableView.reloadData()
@@ -58,10 +59,10 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
     
     func askProviderForNews(){
         if category == Categories.all{
-            if dataModelInstance.topHeadlinesData != nil{
+            if dataModelInstance.topHeadlinesData != nil,!dataModelInstance.sourceDataHasChanged{
                 headlinesData = dataModelInstance.topHeadlinesData!
             }else{
-                dataModelInstance.getNewsData(fromSources: sources)
+                dataModelInstance.getNewsData(fromSources: dataModelInstance.getSelectedSources())
             }
         }else{
             dataModelInstance.getNewsData(fromCategories: [category])
@@ -75,7 +76,7 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return headlinesData.count
     }
-    
+   
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "NewsCell")
         cell?.selectionStyle = .none
@@ -97,6 +98,8 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
         }
         return cell!
     }
+    
+    
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let imageURL = headlinesData[indexPath.item].articleImageURL{
@@ -120,11 +123,11 @@ class NewsStrikeViewController: UIViewController,UITableViewDelegate,UITableView
 
 extension NewsStrikeViewController: DataModelDelegateProtocol {
     
-    func recievedDataSuccesfully(articleData: [NewsArtizxcle]) {
+    func recievedDataSuccesfully(articleData: [NewsArticle]) {
         self.headlinesData = articleData
     }
     
-    func failedRecievingData(withError error: Error) {
+    func failedRecievingData(dueTo error: Error) {
         
     }
 }

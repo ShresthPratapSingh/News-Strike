@@ -12,13 +12,13 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.isScrollEnabled = false
         tableView.tableFooterView = UIView()
-        tableView.contentInset = UIEdgeInsets(top: 40, left: 0, bottom: 0, right: 0)
         tableView.reloadData()
+        
+        SettingsDataModel.delegate = self
     }
     
-    var dataModel = SettingsDataModel()
+    var settingsDataModel = SettingsDataModel()
     
     static var rootTabBar : UITabBarController?
     
@@ -42,7 +42,7 @@ class SettingsTableViewController: UITableViewController {
         case 0 :
             imageName = "layers"
         case 1:
-            imageName = "categories_colour"
+            imageName = "light_bulb"
         default:
             imageName = "placeholder"
         }
@@ -52,7 +52,7 @@ class SettingsTableViewController: UITableViewController {
         view.addSubview(headerImage)
         
         let headerLabel = UILabel(frame: CGRect(x: 45, y: 5, width: 200, height: 35))
-        headerLabel.text = dataModel.sectionTitlesFor(section:section)
+        headerLabel.text = settingsDataModel.sectionTitlesFor(section:section)
         headerLabel.textColor = .white
         headerLabel.font = UIFont(name: "System Bold", size: CGFloat(22))
         headerLabel.font = UIFont.boldSystemFont(ofSize: CGFloat(22))
@@ -71,21 +71,23 @@ class SettingsTableViewController: UITableViewController {
         switch indexPath.section {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "CustomiseUX", for: indexPath) as! CustomiseUXTableViewCell
+            cell.labelWidthconstraint.constant = UIScreen.main.bounds.width - CGFloat(50)
             cell.setToggleIsSelected(isSelected: UserDefaults.standard.bool(forKey: Keys.isPrefferedUIPageScroll))
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
         
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "IndividualCategoryCell", for: indexPath) as! IndividualCategoryTableViewCell
-            cell.categoryLabel.text = SettingsDataModel.data[indexPath.section][indexPath.row]
+            let cell = tableView.dequeueReusableCell(withIdentifier: "IndividualSourceCell", for: indexPath) as! IndividualSourceTableViewCell
+            cell.sourceLabel.text = SettingsDataModel.data[indexPath.section][indexPath.row]
             cell.selectionStyle = UITableViewCell.SelectionStyle.none
             return cell
             
         default:
-            return tableView.dequeueReusableCell(withIdentifier: "No Data", for: indexPath)
+            return UITableViewCell()
         }
         
      }
+    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             switch indexPath.section{
@@ -106,12 +108,22 @@ class SettingsTableViewController: UITableViewController {
                         cell.setToggleIsSelected(isSelected: !currentState)
                     }
             case 1:
-                 let cellTapped = tableView.cellForRow(at: indexPath) as! IndividualCategoryTableViewCell
-                cellTapped.categoryImageView.isHidden = !cellTapped.categoryImageView.isHidden
-                tableView.reloadData()
+                 let cellTapped = tableView.cellForRow(at: indexPath) as! IndividualSourceTableViewCell
+                 
+                 if let sourceDisplayedAtIndexPath = DataModel.sharedInstance.sourceData?[indexPath.row]{
+                    sourceDisplayedAtIndexPath.isSelected = !sourceDisplayedAtIndexPath.isSelected
+                    cellTapped.sourceImageView.isHidden = !cellTapped.sourceImageView.isHidden
+                 }
+                 tableView.reloadData()
+                
             default:
                 return
             }
     }
 
+}
+extension SettingsTableViewController: SettingsDataModelDelegateProtocol{
+    func dataUpdatedSuccesfully() {
+        tableView.reloadData()
+    }
 }

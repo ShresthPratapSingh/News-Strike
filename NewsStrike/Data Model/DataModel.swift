@@ -9,28 +9,64 @@
 import Foundation
 
 protocol DataModelDelegateProtocol{
-    func recievedDataSuccesfully(articleData:[NewsArtizxcle])
-    func failedRecievingData(withError error: Error)
+    func recievedDataSuccesfully(articleData:[NewsArticle])
+    func failedRecievingData(dueTo error: Error)
 }
+
 
 class DataModel:NSObject{
     
-    static var sharedInstance = DataModel(withAPIKey: "f1302092afc14ebe95c72a4f74affa92")
+    var sourceDataHasChanged:Bool = false
+    
+    private override init() {
+        super.init()
+        if sourceData == nil {
+            getSourceData()
+        }
+    }
+    
+    static var sharedInstance = DataModel()
     
     var delegate:DataModelDelegateProtocol?
     
-    private let apiManager : NewsAPIManager?
+    private let apiManager = NewsAPIManager(apiKey: "f1302092afc14ebe95c72a4f74affa92")
     
-    private (set) var topHeadlinesData : [NewsArtizxcle]?
-    private (set) var newsCategoryData : [NewsArtizxcle]?
+    private (set) var topHeadlinesData : [NewsArticle]?
+    private (set) var newsCategoryData : [NewsArticle]?
     
-    private init(withAPIKey key: String) {
-        self.apiManager = NewsAPIManager(apiKey: key)
+    private(set) var sourceData:[NewsSource]?{
+        didSet{
+            sourceDataHasChanged = true
+            for source in sourceData!{
+                if let name = source.sourceName{
+                    SettingsDataModel.data[1].append(name)
+                }
+            }
+            SettingsDataModel.delegate?.dataUpdatedSuccesfully()
+        }
     }
     
-    func getNewsData(fromSources sources : [NewsSources]){
+    func getSourceData(){
+        apiManager.fetchNewsSources(completionHandler: { (sources) in
+            self.sourceData = sources
+        }, failure: {(error) in})
+    }
+    
+    func getSelectedSources()->[NewsSource]{
+        var selectedSourceArray = [NewsSource]()
+        if sourceData != nil{
+            for source in sourceData!{
+                if source.isSelected{
+                    selectedSourceArray.append(source)
+                }
+            }
+        }
+        return selectedSourceArray
+    }
+    
+    func getNewsData(fromSources sources : [NewsSource]){
         weak var weakSelf = self
-        apiManager!.fetchTopNewsArticles(fromSources: sources, completionHandler: { (newsArticles) in
+        apiManager.fetchTopNewsArticles(fromSources: sources, completionHandler: { (newsArticles) in
             weakSelf?.topHeadlinesData = newsArticles
            
             if let data = (weakSelf?.topHeadlinesData!){
@@ -39,17 +75,19 @@ class DataModel:NSObject{
             
         })
         { (error) in
-            weakSelf?.delegate?.failedRecievingData(withError: error)
+            weakSelf?.delegate?.failedRecievingData(dueTo: error)
         }
     }
     
     func getNewsData(fromCategories categories : [Categories]){
-        apiManager!.fetchTopNewsArticles(fromCategories: categories, completionHandler: { (newsArticles) in
+        apiManager.fetchTopNewsArticles(fromCategories: categories, completionHandler: { (newsArticles) in
             self.newsCategoryData = newsArticles
             self.delegate?.recievedDataSuccesfully(articleData: self.newsCategoryData!)
         })
         { (error) in
-            self.delegate?.failedRecievingData(withError: error)
+            self.delegate?.failedRecievingData(dueTo: error)
         }
     }
+    
+    
 }

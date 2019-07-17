@@ -23,6 +23,12 @@ enum Categories : String{
     case general
 }
 
+enum Country : String{
+    case all = ""
+}
+
+
+
 enum NewsSources : String,CaseIterable{
     case abcNews = "abc-news"
     case cnn = "cnn"
@@ -52,7 +58,7 @@ class NewsAPIManager: NSObject {
         self.apiKey = apiKey
     }
     
-    func fetchTopNewsArticles(fromCategories categories : [Categories],inLanguage language:Language = .english,completionHandler: @escaping ([NewsArtizxcle])->Void,failure: (@escaping (Error)->())){
+    func fetchTopNewsArticles(fromCategories categories : [Categories],inLanguage language:Language = .english,completionHandler: @escaping ([NewsArticle])->Void,failure: (@escaping (Error)->())){
         var urlString = "https://newsapi.org/v2/sources?"
         let categoryString = generateCategoryString(from: categories)
         urlString.append(categoryString  + "&language=\(language.rawValue)" + "&apiKey=\(apiKey)")
@@ -88,9 +94,9 @@ class NewsAPIManager: NSObject {
                                     failure(error)
                                 default:
                                     if let jsonResponse = response.result.value as? [String: Any?], let articlesDict = jsonResponse["articles"] as? [[String: Any?]] {
-                                        var newsArticles = [NewsArtizxcle]()
+                                        var newsArticles = [NewsArticle]()
                                         for article in articlesDict {
-                                            newsArticles.append(NewsArtizxcle(article))
+                                            newsArticles.append(NewsArticle(article))
                                         }
                                         completionHandler(newsArticles)
                                     }
@@ -103,7 +109,7 @@ class NewsAPIManager: NSObject {
         }
     }
     
-    func fetchTopNewsArticles(fromSources sources: [NewsSources],inLanguage language:Language = .english, completionHandler: @escaping (([NewsArtizxcle]) -> ()), failure: @escaping (Error) -> Void) {
+    func fetchTopNewsArticles(fromSources sources: [NewsSource],inLanguage language:Language = .english, completionHandler: @escaping (([NewsArticle]) -> ()), failure: @escaping (Error) -> Void) {
         var urlString = "https://newsapi.org/v2/top-headlines?"
         let sourceString = generateSourceString(from: sources)
         urlString.append(sourceString + "&language=\(language.rawValue)" + "&apiKey=\(apiKey)")
@@ -118,9 +124,9 @@ class NewsAPIManager: NSObject {
                     failure(error)
                 default:
                     if let jsonResponse = response.result.value as? [String: Any?], let articlesDict = jsonResponse["articles"] as? [[String: Any?]] {
-                            var newsArticles = [NewsArtizxcle]()
+                            var newsArticles = [NewsArticle]()
                             for article in articlesDict {
-                                newsArticles.append(NewsArtizxcle(article))
+                                newsArticles.append(NewsArticle(article))
                             }
                             completionHandler(newsArticles)
                         }
@@ -129,14 +135,39 @@ class NewsAPIManager: NSObject {
             }
     }
     
+    func fetchNewsSources(for category: Categories = .all,_ language:Language = .english,_ country : Country = .all,completionHandler:@escaping ([NewsSource])->(),failure:@escaping (Error)->()){
+        var urlString = "https://newsapi.org/v2/sources?"
+        urlString.append("category=\(category.rawValue)&"+"language=\(language.rawValue)&"+"country=\(country.rawValue)&"+"apiKey=\(apiKey)")
+        if let url = URL(string: urlString){
+            Alamofire.request(url).validate().responseJSON { (response) in
+                switch response.result{
+                case .failure(let error):
+                    print("!!Failed to fetch sources!!")
+                    failure(error)
+                default:
+                    if let jsonResponse = response.result.value as? [String:Any?],let sourcesJSON = jsonResponse["sources"] as? [[String:String?]]{
+                        var newsSources = [NewsSource]()
+                        for source in sourcesJSON{
+                            newsSources.append(NewsSource(source))
+                        }
+                        completionHandler(newsSources)
+                    }
+                }
+            }
+        }
+        
+    }
     
-    private func generateSourceString(from sources:[NewsSources])->String{
+    
+    private func generateSourceString(from sources:[NewsSource])->String{
         var sourceString = "sources="
         for source in sources{
-            if source != sources.last{
-                sourceString.append(source.rawValue + ",")
-            }else{
-                sourceString.append(source.rawValue)
+            if source.sourceID != nil{
+                if source != sources.last{
+                    sourceString.append(source.sourceID! + ",")
+                }else{
+                    sourceString.append(source.sourceID!)
+                }
             }
         }
         return sourceString
