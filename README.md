@@ -2,9 +2,9 @@
 News-Strike is a news app that provides latest news from a number of sources.
 ## Setup
 1. Close Xcode
-2. Open a terminal window, and '''$ cd''' into your project directory.
-3. Run '''$ pod install'''
-4. You may require to run '''$ pod update'''
+2. Open a terminal window, and ```$ cd``` into your project directory.
+3. Run ```$ pod install```
+4. You may require to run ```$ pod update```
 ## Features
 1. Browse top headlines super fast
 2. Browse in eight dufferent categories
